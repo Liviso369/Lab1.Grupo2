@@ -1,6 +1,7 @@
 package Ejercicio5;
 
 import java.util.*;
+import javax.swing.JOptionPane;
 
 public class Alumno {
 
@@ -26,6 +27,11 @@ public class Alumno {
 
     public void setLegajo(int legajo) {
         this.legajo = legajo;
+    }
+
+    @Override
+    public String toString() {
+        return apellido+", "+nombre;
     }
 
     public String getApellido() {
@@ -55,11 +61,11 @@ public class Alumno {
     public void agregarMateria(Materia m) {
         
         if (materias.add(m)) {
-            
-            materias.add(m);
+
+            JOptionPane.showMessageDialog(null, "Alumno Inscripto");
             
         }else{
-            System.out.println("ya la materia fue agregada");
+            JOptionPane.showMessageDialog(null, "Alumno no Inscripto");
         }  
     }
 
