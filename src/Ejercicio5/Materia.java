@@ -18,6 +18,11 @@ public class Materia {
         return idMateria;
     }
 
+    @Override
+    public String toString() {
+        return nombre;
+    }
+
     public void setIdMateria(int idMateria) {
         this.idMateria = idMateria;
     }
