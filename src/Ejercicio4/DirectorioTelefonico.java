@@ -1,18 +1,44 @@
 package Ejercicio4;
 
 import java.util.*;
+import javax.swing.JOptionPane;
 
 public class DirectorioTelefonico {
 
     Map<Long, Cliente> directorio;
 
-    public DirectorioTelefonico() {
+    private static DirectorioTelefonico dire = null;
+
+    private DirectorioTelefonico() {
         this.directorio = new LinkedHashMap<>();
     }
 
+    public static DirectorioTelefonico getInstance() {
+
+        if (dire == null) {
+
+            dire = new DirectorioTelefonico();
+        }
+        return dire;
+    }
+
+    public Map<Long, Cliente> getDirectorio() {
+        return directorio;
+    }
+
+    public void setDirectorio(Map<Long, Cliente> directorio) {
+        this.directorio = directorio;
+    }
+
     public void agregarCliente(long phone, Cliente client) {
-        directorio.put(phone, client);
-        System.out.println("CLiente añadido");
+
+        if (directorio.get(phone) != null) {///si existe el cliente devuelve true quiere decir que la clave ya existe,sino false
+
+            JOptionPane.showMessageDialog(null, "ya existe este numero de telefono");
+        } else {
+            directorio.put(phone, client);
+            JOptionPane.showMessageDialog(null, "Cliente añadido");
+        }
     }
 
     public Cliente buscarCliente(long phone) {
@@ -20,91 +46,41 @@ public class DirectorioTelefonico {
     }
 
     public List<Long> buscarTelefono(String lastName) {
-        boolean validar = true;///no sirve para validar si hay clientes o no hubo un cliente con ese apellido
-        List<Long> listphone = new ArrayList<>();//se inicializa la lista la cual vamos a devolver
 
-        for (Map.Entry<Long, Cliente> entry : directorio.entrySet()) {///se recorre el mapa por parejas
+        List<Long> listphone = new ArrayList<>();
 
-            if (entry.getValue().getApellido().equalsIgnoreCase(lastName)) {
+        for (Long key : directorio.keySet()) {
 
-                listphone.add(entry.getKey());
-                validar = false;
+            if (directorio.get(key).getApellido().equalsIgnoreCase(lastName)) {
+
+                listphone.add(key);
             }
         }
-        if (validar) {
-            System.out.println("no se encontro el cliente");
-        } else {
-            System.out.print("El o los numeros del cliente o los cliente que buscaba son: ");
-        }
-        return listphone;
+        return listphone;//no es necesario comprobar si hay algo en la lista ya que su funcion es delvolver la lista, validar desde el main
     }
 
     public Set<Cliente> buscarClientes(String city) {
 
-        boolean validar = true;
-
         Set<Cliente> setClient = new HashSet<>();
 
-        for (Map.Entry<Long, Cliente> entry : directorio.entrySet()) {
+        for (Cliente valores : directorio.values()) {
 
-            if (entry.getValue().getCiudad().equalsIgnoreCase(city)) {
+            if (valores.getCiudad().equalsIgnoreCase(city)) {
 
-                setClient.add(entry.getValue());
-                validar = false;
+                setClient.add(valores);
             }
         }
-        if (validar) {
-            System.out.println("no se encontro el cliente de la ciudad de " + city);
-        } else {
-            System.out.println("El o los clientes que buscaba son: ");
-        }
+
         return setClient;
     }
 
-    public void borrarCliente(long document) {
+    public void borrarCliente(long phone) {
 
-        boolean validar = true;
+        if (directorio.remove(phone) != null) {
+            JOptionPane.showMessageDialog(null, "Cliente Borrado");
 
-        Set<Long> claves = directorio.keySet();///se trasforma el mapa en un Set para asi aplicar el iterator
-
-        Iterator<Long> itera = claves.iterator();///se utiliza el iterator para borrar algun elemento mientras recorremos la coleccion
-
-        while (itera.hasNext()) {
-
-            if (directorio.get(itera.next()).getDni() == document) { // con el get traemos el valor de esa clave y si coincide con el documento lo remueve
-                itera.remove();
-                validar = false;
-            }
-        }
-        if (validar) {
-            System.out.println("no se encontro el cliente");
         } else {
-            System.out.println("cliente removido");
+            JOptionPane.showMessageDialog(null, "No existe el cliente");
         }
     }
-
-    public void mostrarClientes() {
-        boolean validar = true;
-
-        for (Map.Entry<Long, Cliente> entry : directorio.entrySet()) {///Recorre la coleccion y la muestra
-            System.out.println("El cliente es: " + entry.getValue() + " y " + "su telefono es " + entry.getKey());
-            validar = false;
-        }
-        if (validar) {
-            System.out.println("no hay ningun cliente en la lista");
-        }
-    }
-
-    public boolean verificarCLave(long phone) {
-
-        for (Long clave : directorio.keySet()) {///verifica la clave/telefono que ingresa el usuario para avisarle si esta repetida
-
-            if (phone == clave) {
-
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
